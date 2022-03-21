@@ -1,9 +1,9 @@
 import structuredClone from '@ungap/structured-clone';  // https://stackoverflow.com/a/122704
 
-export function Tank([x, y], { n_action, n_health, n_range, mx_action, mx_health, mx_range }) {
+export function Tank([h, k], { n_action, n_health, n_range, mx_action, mx_health, mx_range }) {
     return {
-        x: x,
-        y: y,
+        h: h,
+        k: k,
 
         n_action: n_action || 3,
         n_health: n_health || 3,

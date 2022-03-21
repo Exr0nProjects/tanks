@@ -33,7 +33,7 @@ export default function({ players }) {
 
     // event handlers
     function handlePointerMove(ev) {
-        console.log(ev)
+        //console.log(ev)
         game_dispatch({ type: 'view_pan', 'x': ev.movementX, 'y': ev.movementY, 'msg': ev.buttons });
     }
 
