@@ -40,7 +40,9 @@ export default function({ players }) {
     return <div
         className="relative w-screen h-screen overflow-hidden bg-black overscroll-none"
         onPointerMove={handlePointerMove}>
-            <span className="text-blue-300">{game_state.view_x}, {game_state.view_y}, {game_state.msg}</span>
+            <div className="fixed">
+                <span className="text-blue-300">{game_state.view_x}, {game_state.view_y}, {game_state.msg}</span>
+            </div>
             <SquareHexBoard className="absolute" scale={100} pos_x={0} pos_y={0}/>
     </div>
 }
