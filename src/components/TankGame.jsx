@@ -1,12 +1,17 @@
 import React, { useReducer } from 'react';
 import update from 'immutability-helper';
-import { Tank, TankDo } from '../proto/tank.js';
+
+import SquareHexBoard from './SquareHexBoard';
+import { Tank, TankDo } from '../proto/tank';
 
 export default function({ players }) {
     let [ game_state, game_dispatch ] = (() => {
         const init_arg = {
             'blocks': {},       // coords -> # blocks
             'players': {},      // player_id (plid) -> tank struct
+            view_x: 0,
+            view_y: 0,
+            msg: '',
         }
         function reducer(state, action) {
             // TODO
@@ -14,10 +19,11 @@ export default function({ players }) {
                 case 'update_player':
                     return update(state, { [action.plid]: {$set: action.payload} });
                 case 'view_pan':
-                    return update(state, {
-                        x: state.x + action.event.movementX,
-                        y: state.y + action.event.movementY
-                    });
+                    return {...state,
+                        view_x: state.view_x + action.x,
+                        view_y: state.view_y + action.y,
+                        msg: action.msg || '',
+                    };
                 default:
                     throw new Error(`unknown action type ${action.type}`);
             }
@@ -27,11 +33,15 @@ export default function({ players }) {
 
     // event handlers
     function handlePointerMove(ev) {
-        console.log(ev.movementX, ev.movementY);
+        console.log(ev)
+        game_dispatch({ type: 'view_pan', 'x': ev.movementX, 'y': ev.movementY, 'msg': ev.buttons });
     }
 
-    return <div className="w-screen h-screen overflow-hidden bg-black" onPointerMove={handlePointerMove}>
-
+    return <div
+        className="relative w-screen h-screen overflow-hidden bg-black overscroll-none"
+        onPointerMove={handlePointerMove}>
+            <span className="text-blue-300">{game_state.view_x}, {game_state.view_y}, {game_state.msg}</span>
+            <SquareHexBoard className="absolute" scale={100} pos_x={0} pos_y={0}/>
     </div>
 }
 
