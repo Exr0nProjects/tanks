@@ -1,17 +1,18 @@
-class Tank {
-    // getters?? https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/get
-    constructor([x, y], { n_action, n_health, n_range, mx_action, mx_health, mx_range }) {
-        this.x = x;
-        this.y = y;
+import structuredClone from '@ungap/structured-clone';  // https://stackoverflow.com/a/122704
 
-        this.n_action = n_action || 3;
-        this.n_health = n_health || 3;
-        this.n_range  = n_range  || 3;
-        this.mx_action = mx_action || 12;
-        this.mx_health = mx_health || 12;
-        this.mx_range  = mx_range  || 12;
+export function Tank([x, y], { n_action, n_health, n_range, mx_action, mx_health, mx_range }) {
+    return {
+        x: x,
+        y: y,
 
-        this.stats = {
+        n_action: n_action || 3,
+        n_health: n_health || 3,
+        n_range : n_range  || 3,
+        mx_action: mx_action || 12,
+        mx_health: mx_health || 12,
+        mx_range : mx_range  || 12,
+
+        stats: {
             'distance_moved': 0,
             'times_shot':  0,
             'blocks_built': 0,
@@ -19,16 +20,20 @@ class Tank {
             'actions_recieved': 0,
             //'upgrades': 0,
             //'actions_used':   0,
-        }
+        },
+        get can_upgr_health() { return this.n_action > 0 && this.n_health < this.mx_health; },
+        get can_upgr_range () { return this.n_action > 0 && this.n_range  < this.mx_range ; },
     }
-    can_upgr_health() { return this.n_action > 0 && this.n_health < this.mx_health; }
-    can_upgr_range () { return this.n_action > 0 && this.n_range  < this.mx_range ; }
-    upgr_health() { console.assert(this.can_upgr_health()); this.n_action -= 1; this.n_health += 1; }
-    upgr_range () { console.assert(this.can_upgr_range ()); this.n_action -= 1; this.n_range  += 1; }
-    do_move(d) { console.assert(this.n_action > d); this.n_action -= d; this.distance_moved += d; }
-    do_shoot() { console.assert(this.n_action > 0); this.n_action -= 1; this.stats.times_shot += 1; }
-    do_build() { console.assert(this.n_action > 0); this.n_action -= 1; this.stats.blocks_built += 1; }
-    do_gift () { console.assert(this.n_action > 0); this.n_action -= 1; this.stats.actions_gifted += 1; }
-    do_recv () { console.assert(this.n_action < this.mx_action); this.n_action += 1; this.stats.actions_recieved += 1; }
+}
+
+export const TankDo = {
+    // TODO OPTM: use immutibility-helper update instead of deep copying
+    upgr_health: (t) => { console.assert(t.can_upgr_health());      t = structuredClone(t); t.n_action -= 1; t.n_health += 1; return t; },
+    upgr_range:  (t) => { console.assert(t.can_upgr_range ());      t = structuredClone(t); t.n_action -= 1; t.n_range  += 1; return t; },
+    do_move:  (t, d) => { console.assert(t.n_action > d);           t = structuredClone(t); t.n_action -= d; t.distance_moved += d; return t; },
+    do_shoot: (t) =>    { console.assert(t.n_action > 0);           t = structuredClone(t); t.n_action -= 1; t.stats.times_shot += 1; return t; },
+    do_build: (t) =>    { console.assert(t.n_action > 0);           t = structuredClone(t); t.n_action -= 1; t.stats.blocks_built += 1; return t; },
+    do_gift:  (t) =>    { console.assert(t.n_action > 0);           t = structuredClone(t); t.n_action -= 1; t.stats.actions_gifted += 1; return t; },
+    do_recv:  (t) =>    { console.assert(t.n_action < t.mx_action); t = structuredClone(t); t.n_action += 1; t.stats.actions_recieved += 1; return t; },
 }
 
