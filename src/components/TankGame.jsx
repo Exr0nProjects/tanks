@@ -1,7 +1,7 @@
 import React, { useReducer } from 'react';
 import update from 'immutability-helper';
 
-import SquareHexBoard from './SquareHexBoard';
+import HexBoardView from './HexBoardView';
 import { Tank, TankDo } from '../proto/tank';
 
 export default function({ players }) {
@@ -45,7 +45,7 @@ export default function({ players }) {
             <div className="fixed">
                 <span className="text-blue-300">{game_state.view_x}, {game_state.view_y}, {game_state.msg}</span>
             </div>
-            <SquareHexBoard className="absolute" scale={100} pos_x={game_state.view_x} pos_y={game_state.view_y}/>
+            <HexBoardView className="absolute" scale={100} pos_x={game_state.view_x} pos_y={game_state.view_y}/>
     </div>
 }
 
