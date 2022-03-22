@@ -34,7 +34,9 @@ export default function({ players }) {
     // event handlers
     function handlePointerMove(ev) {
         //console.log(ev)
-        game_dispatch({ type: 'view_pan', 'x': ev.movementX, 'y': ev.movementY, 'msg': ev.buttons });
+        if (ev.buttons === 1) {     // mouse dragging
+            game_dispatch({ type: 'view_pan', 'x': ev.movementX, 'y': ev.movementY });
+        }
     }
 
     return <div
@@ -43,7 +45,7 @@ export default function({ players }) {
             <div className="fixed">
                 <span className="text-blue-300">{game_state.view_x}, {game_state.view_y}, {game_state.msg}</span>
             </div>
-            <SquareHexBoard className="absolute" scale={100} pos_x={0} pos_y={0}/>
+            <SquareHexBoard className="absolute" scale={100} pos_x={game_state.view_x} pos_y={game_state.view_y}/>
     </div>
 }
 
